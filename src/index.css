@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
+@layer base {
   @font-face {
-    font-family: 'iransans';
-    src: url('./fonts/IRANSans_Black.ttf');
+    font-family: "iransans";
+    src: url("./fonts/IRANSans_Black.ttf");
   }
   @font-face {
     font-family: "iransansbold";
-    src: url("./fonts/IRANSans/IRANSans_Bold.ttf") format("ttf");
+    src: url("./fonts/IRANSans_Bold.ttf") format("ttf");
   }
 
   @font-face {
@@ -19,6 +19,12 @@
   @font-face {
     font-family: "Morabba";
     src: url("./fonts/IRANSans/Morabba-Light.woff2") format("woff2");
+  }
+}
+@layer utilities {
+  .backgroundImage {
+    background-image: linear-gradient(15deg, #fdc814 50%, transparent 50%),
+      linear-gradient(-90deg, red 50%, transparent 50%);
   }
 }
 *,

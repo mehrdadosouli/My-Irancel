@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+  @font-face {
+    font-family: 'iransans';
+    src: url('./fonts/IRANSans_Black.ttf');
+  }
+  @font-face {
+    font-family: "iransansbold";
+    src: url("./fonts/IRANSans/IRANSans_Bold.ttf") format("ttf");
+  }
+
+  @font-face {
+    font-family: "Morabba-Bold";
+    src: url("./fonts/IRANSans/Morabba-Bold.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Morabba";
+    src: url("./fonts/IRANSans/Morabba-Light.woff2") format("woff2");
+  }
+}
+*,
+*::after,
+*::before {
+  direction: rtl;
+  padding: 0;
+  right: 0;
+  box-sizing: inherit;
+}
+html {
+  background-color: #fbfbfb;
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.6;
+  font-family: "iransans";
+}

@@ -36,7 +36,7 @@ const options = {
 };
 export default function CenterSide() {
   return (
-    <div className="flex flex-col gap-10 min-w-[70rem] mx-10 ">
+    <div className="flex flex-col gap-10 min-w-[70rem] ">
       <div className="relative mt-10">
         <img
           src="https://irancell.ir/wp-content/uploads/2024/02/Web-Banner-1680x840-CTA-EN.jpg"

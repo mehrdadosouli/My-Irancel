@@ -1,6 +1,6 @@
 const mysql=require('mysql')
 const db=mysql.createConnection({
-    port:'localhost',
+    host:'localhost',
     user:'root',
     password:'',
     database:'myirancell'

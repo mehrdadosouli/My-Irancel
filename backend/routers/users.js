@@ -1,6 +1,7 @@
 const express=require('express')
 const db=require('../db/MyIrancellDB.js')
 const userRouter=express.Router()
+const registerRouter=express.Router()
 const getUserId=require('../utils/funcs.js')
 // const jwt = require('jsonwebtoken');
 
@@ -30,7 +31,7 @@ db.connect((err)=>{
 })
 
 userRouter.get('/users',(req,res)=>{
-    if(req.path=='users'){
+    if(req.path=='/users'){
         let querys=`SELECT * FROM users WHERE firsname=${req.body.firsname} AND phone=${req.body.phone}`
         db.query(querys,(err,response)=>{
             if(err){
@@ -43,5 +44,19 @@ userRouter.get('/users',(req,res)=>{
         })
     }
 })
+registerRouter.post('/register',(req,res)=>{
+    if(req.path=='/register'){
+        let querys=`INSERT INTO register VALUES ('NULL','${req.body.username}','${req.body.userfamily}','${req.body.phone}','${req.body.password}')`
+        db.query(querys,(err,response)=>{
+            if(err){
+                console.log('insert nashod',err);
+                res.send(JSON.stringify('not user',err))
+            }else{
+                console.log('insert shod');
+                res.send(JSON.stringify(response)) 
+            }
+        })
+    }
+})
 
-module.exports = userRouter
+module.exports = {userRouter,registerRouter}

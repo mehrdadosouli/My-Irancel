@@ -1,13 +1,7 @@
 import React, { useState } from 'react'
-
+import { swal } from '../../utils/funcs.js'
 export default function LoginAndRegister() {
   const [formName,setFormName]=useState('login')
-  let usernameR=document.querySelector('#usernamesignup')
-  let userfamilyR=document.querySelector('#userfamilysignup')
-  let passwordR=document.querySelector('#passwordsignup')
-  let phoneR=document.querySelector('#phonesignup')
-  let usernameRL=document.querySelector('#usernamelogin')
-  let phoneL=document.querySelector('#phonelogin')
   const [registered,setRegistered]=useState({
     username:'',
     userfamily:'',
@@ -16,10 +10,13 @@ export default function LoginAndRegister() {
   })
 
   const changeHandlerRegister=(event)=>{
-    setRegistered(prev=>({...prev,[event.target.name]:event.target.value}))
+      setRegistered(prev=>({...prev,[event.target.name]:event.target.value}))
   }
   const submitSignUpHandler=(event)=>{
     event.preventDefault()
+    if(!registered.username.length){
+      swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی', () => window.location.href = '/' );
+    }
     let allRegistered={
       username:registered.username.trim(),
       userfamily:registered.userfamily.trim(),
@@ -35,11 +32,14 @@ export default function LoginAndRegister() {
     })
     .then(res=>{
       if(res.status==200){
-        
+        swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی', () => window.location.href = '/' );
+      }else{
+        swal('ثبت نام','ثبت نام با موفقیت انجام نشد','warrning','باشه',()=>window.location.href ='/register')
       }
+      ;return res.json()
     })
     .then(dat=>console.log(dat))
-    
+    .catch(err=>console.log(err)) 
   }
   const submitLoginHandler=(event)=>{
     
@@ -56,6 +56,7 @@ export default function LoginAndRegister() {
         <div className={`flex flex-col p-24 shadow-2xl w-[500px] gap-10 bg-slate-700 rounded-3xl relative overflow-hidden ${formName=='login' ? 'min-h-[49rem]' : 'min-h-[59rem]'}`}>
           <h1 className='mx-auto p-3 text-white-50 hover:cursor-pointer w-fit' onClick={loginHandler}>Login</h1>
           <form action="#" className='flex flex-col gap-10 [&>*]:p-5 [&>*]:rounded-2xl [&>*]:outline-0 [&>*]:placeholder:text-lg'>
+            
             <input autoComplete='on' type="text" name="username" id="usernamelogin"placeholder='نام' />
             <input autoComplete='on' type="number" name="phone" id="phonelogin" placeholder='شماره موبایل'/>
             <button onClick={submitLoginHandler} className='p-10 bg-purple-300 text-white-50 hover:text-blue-400'>Login</button>

@@ -1,11 +1,9 @@
-const express=require('express')
-const db=require('../db/MyIrancellDB.js')
-const userRouter=express.Router()
-const registerRouter=express.Router()
-const getUserId=require('../utils/funcs.js')
+const express = require("express");
+const db = require("../db/MyIrancellDB.js");
+const userRouter = express.Router();
+const registerRouter = express.Router();
+const getUserId = require("../utils/funcs.js");
 // const jwt = require('jsonwebtoken');
-
-
 
 // // کلید اختصاصی برای امضای توکن
 // const secretKey = process.env.JWT_SECRET;
@@ -21,42 +19,65 @@ const getUserId=require('../utils/funcs.js')
 
 // console.log(token);
 
+db.connect((err) => {
+  if (err) {
+    console.log(err, "could not connect");
+  } else {
+    console.log("db vasl shod");
+  }
+});
 
-db.connect((err)=>{
-    if(err){
-        console.log(err,'could not connect');
-    }else{
-        console.log('db vasl shod');
-    }
-})
+userRouter.get("/users", (req, res) => {
+  if (req.path == "/users") {
+    let querys = `SELECT * FROM users WHERE firsname=${req.body.firsname} AND phone=${req.body.phone}`;
+    db.query(querys, (err, response) => {
+      if (err) {
+        console.log(err);
+        res.send(JSON.stringify("not user", err));
+      } else {
+        console.log(response);
+        res.send(JSON.stringify(response));
+      }
+    });
+  }
+});
 
-userRouter.get('/users',(req,res)=>{
-    if(req.path=='/users'){
-        let querys=`SELECT * FROM users WHERE firsname=${req.body.firsname} AND phone=${req.body.phone}`
-        db.query(querys,(err,response)=>{
-            if(err){
-                console.log(err);
-                res.send(JSON.stringify('not user',err))
-            }else{
-                console.log(response);
-                res.send(JSON.stringify(response)) 
+registerRouter.post("/register", (req, res) => {
+  if (req.path == "/register") {
+    let hasUserInDb = `SELECT * FROM register`;
+    let queryInsert = `INSERT INTO register SET ?`;
+
+    db.query(hasUserInDb, (errs, result) => {
+      if (errs) {
+        console.log("خطا در جستجوی کاربر", errs);
+        return res.status(500).json({ message: "خطا در اتصال" });
+      }
+      if (result.length > 0) {
+        var isUser = result.map((elem) => {
+          if (elem.username == req.body.username) {
+            return elem;
+          } else {
+            return null;
+          }
+        });
+
+        if (isUser == undefined) {
+          db.query(queryInsert, req.body, (error, respons) => {
+            if (error) {
+              console.log("error");
+              res.status(JSON.stringify("ثبت نام موفقیت امیز نبود", error));
+            } else {
+              console.log("user is successfuly add to database");
+              res.send(JSON.stringify("ثبت نام موفقیت امیز بود", respons));
             }
-        })
-    }
-})
-registerRouter.post('/register',(req,res)=>{
-    if(req.path=='/register'){
-        let querys=`INSERT INTO register VALUES ('NULL','${req.body.username}','${req.body.userfamily}','${req.body.phone}','${req.body.password}')`
-        db.query(querys,(err,response)=>{
-            if(err){
-                console.log('insert nashod',err);
-                res.send(JSON.stringify('not user',err))
-            }else{
-                console.log('insert shod');
-                res.send(JSON.stringify(response)) 
-            }
-        })
-    }
-})
+          });
+        } else {
+          console.log("user has before registered");
+          res.status(401).json({ message: "user has before registered " });
+        }
+      }
+    });
+  }
+});
 
-module.exports = {userRouter,registerRouter}
+module.exports = { userRouter, registerRouter };

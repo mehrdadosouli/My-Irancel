@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify';
+import {toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import  { swal,ToastService,validInputsRegister } from '../../utils/funcs.js'
+
 export default function LoginAndRegister() {
+  
   const [formName,setFormName]=useState('login')
   const [err,setErr]=useState({})
   const [registered,setRegistered]=useState({
@@ -56,6 +58,8 @@ export default function LoginAndRegister() {
       console.log(error,'نتوانست ارسال کند');
     }
 
+    }else{
+      console.log(err);
     }
   }
   const submitLoginHandler=(event)=>{

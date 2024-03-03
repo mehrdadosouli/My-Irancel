@@ -26,7 +26,7 @@ db.connect((err) => {
     console.log("db vasl shod");
   }
 });
-
+// getuser
 userRouter.get("/users", (req, res) => {
   if (req.path == "/users") {
     let querys = `SELECT * FROM users WHERE firsname=${req.body.firsname} AND phone=${req.body.phone}`;
@@ -42,42 +42,65 @@ userRouter.get("/users", (req, res) => {
   }
 });
 
+// get register user
+userRouter.get("/register", (req, res) => {
+  if (req.path == "/register") {
+    let queryRegistered = `SELECT * FROM register`;
+    db.query(queryRegistered, (err, response) => {
+      if (err) {
+        console.log(err);
+        res.send(JSON.stringify("not user", err));
+      } else {
+        console.log(response);
+        res.send(JSON.stringify(response));
+      }
+    });
+  }
+});
+
 registerRouter.post("/register", (req, res) => {
   if (req.path == "/register") {
     let hasUserInDb = `SELECT * FROM register`;
     let queryInsert = `INSERT INTO register SET ?`;
-
     db.query(hasUserInDb, (errs, result) => {
-      if (errs) {
-        console.log("خطا در جستجوی کاربر", errs);
-        return res.status(500).json({ message: "خطا در اتصال" });
-      }
-      if (result.length > 0) {
-        var isUser = result.map((elem) => {
-          if (elem.username == req.body.username) {
-            return elem;
-          } else {
-            return null;
-          }
-        });
-
-        if (isUser == undefined) {
+        if (errs) {
+            console.log("خطا در جستجوی کاربر", errs);
+            return res.status(500).json({ message: "خطا در اتصال" });
+        }
+        if (result.length > 0) {
+            var isUser = result.find((elem) => {
+                if (elem.username == req.body.username){
+                    return elem;
+                 } 
+            });
+        if (isUser == undefined || isUser == null ) {
           db.query(queryInsert, req.body, (error, respons) => {
             if (error) {
               console.log("error");
-              res.status(JSON.stringify("ثبت نام موفقیت امیز نبود", error));
+              res.send(JSON.stringify("ثبت نام موفقیت امیز نبود", error));
+            } else {
+              console.log("user is successfuly add to database");
+               res.send(JSON.stringify("ثبت نام موفقیت امیز بود", respons));
+            }
+          });
+        } else {
+          console.log("user has before registered");
+          return res.status(401).json({ message: "user has before registered " });
+        }
+      }else{
+        db.query(queryInsert, req.body, (error, respons) => {
+            if (error) {
+              console.log("error");
+              res.send(JSON.stringify("ثبت نام موفقیت امیز نبود", error));
             } else {
               console.log("user is successfuly add to database");
               res.send(JSON.stringify("ثبت نام موفقیت امیز بود", respons));
             }
           });
-        } else {
-          console.log("user has before registered");
-          res.status(401).json({ message: "user has before registered " });
-        }
       }
     });
   }
 });
 
 module.exports = { userRouter, registerRouter };
+ 

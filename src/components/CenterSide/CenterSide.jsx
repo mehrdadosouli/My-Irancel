@@ -9,7 +9,6 @@ const data = {
     {
       label: "نمودار میزان مصرف اینترنت",
       data: [95, 59, 80, 81, 56, 55, 40],
-      fill: false,
       borderColor: "#FAA300",
       fill: true,
       tension: 0.45,
@@ -36,7 +35,7 @@ const options = {
 };
 export default function CenterSide() {
   return (
-    <div className="flex flex-col gap-10 min-w-[70rem] ">
+    <div className="flex flex-col gap-10 w-[100%]">
       <div className="relative mt-10">
         <img
           src="https://irancell.ir/wp-content/uploads/2024/02/Web-Banner-1680x840-CTA-EN.jpg"

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export default function RightSide() {
   return (
-    <div className='flex flex-col items-center gap-6 bg-white-50 p-10 ml-10'>
+    <div className='flex flex-col items-center gap-6 bg-white-50 p-10 ml-10 w-[25%]'>
         <div>
             <img src="" alt="" />
             <h2>ایرانسل من</h2>

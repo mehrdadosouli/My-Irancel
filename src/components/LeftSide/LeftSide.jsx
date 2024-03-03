@@ -4,7 +4,7 @@ import LeftSideBottom from './LeftSideBottom'
 
 export default function LeftSide() {
   return (
-    <div className='flex flex-col gap-10 mx-10 mt-10'>
+    <div className='flex flex-col gap-10 mx-10 mt-10 w-[25%]'>
         <LeftSideHeader />
         <LeftSideBottom />
     </div>

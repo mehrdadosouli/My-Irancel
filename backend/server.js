@@ -6,8 +6,10 @@ app.use(cors())
 app.use(bodyparser.json({extended:false}))
 const {userRouter}=require('./routers/users.js')
 const {registerRouter}=require('./routers/users.js')
+const {getinfo}=require('./routers/users.js')
 
 app.use('/',userRouter)
 app.use('/',registerRouter)
+app.use('/',getinfo)
 
 app.listen(5000) 

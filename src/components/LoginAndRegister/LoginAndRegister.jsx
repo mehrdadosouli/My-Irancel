@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import  { swal,ToastService,validInputsRegister } from '../../utils/funcs.js'
+import  { swal,ToastService,validInputsRegister,setToLocalStorage } from '../../utils/funcs.js'
 
 export default function LoginAndRegister() {
   
@@ -45,13 +45,13 @@ export default function LoginAndRegister() {
     })
     .then(res=>{
       if(res.status==200 || res.status==201){
-        swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی', () => window.location.href = '/' );
+        swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی',()=>{});
       }else{
         swal('ثبت نام','ثبت نام با موفقیت انجام نشد','warrning','باشه',()=>window.location.href ='/register')
       }
       ;return res.json()
     })
-    .then(data=>console.log(data))
+    .then(data=>setToLocalStorage('user',data))
     .catch(err=>console.log(err))
 
     }catch (error) {

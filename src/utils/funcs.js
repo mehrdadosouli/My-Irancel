@@ -54,4 +54,13 @@ else if(registered.phone.length !== 11){
   return erros
 };
 
-export { swal, ToastService,validInputsRegister };
+const setToLocalStorage=(key,value)=>{
+  return localStorage.setItem(key,JSON.stringify({username:value.username,password:value.password}))
+}
+
+
+const getFromLocalStorage=(key)=>{
+  return localStorage.getItem(key)
+}
+
+export { swal, ToastService,validInputsRegister,setToLocalStorage,getFromLocalStorage };

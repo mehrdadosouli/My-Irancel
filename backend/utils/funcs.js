@@ -1,7 +1,7 @@
 const db =require('../db/MyIrancellDB.js')
-const getUserId=(tokenUser)=>{
-    let querys=`SELECT id FROM users WHERE token=${tokenUser}`
-    db.query(getUserId,(err,res)=>{
+const getUserId=(username,password)=>{
+    let querys=`SELECT id FROM register WHERE username=${username} AND password=${password}`
+    db.query(querys,(err,res)=>{
         if(err){
             console.log('not token user');
             return false

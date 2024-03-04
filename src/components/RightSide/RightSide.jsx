@@ -12,7 +12,7 @@ export default function RightSide() {
         <div className=''>
             <input type="text" placeholder='جستجو...' className=' rounded-2xl text-lg p-2 border border-gold-400 outline-none'/>
         </div>
-        <div className='flex flex-col text-2xl gap-8'>
+        <div className='flex flex-col text-2xl gap-11 hover:[&>*]:text-gold-400'>
            <Link to='/'>صفحه اصلی</Link>
            <Link to='/mypacket'>خرید های من</Link>
            <Link to='/'>کارکرد و فروش</Link>

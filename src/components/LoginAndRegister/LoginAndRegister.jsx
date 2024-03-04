@@ -45,7 +45,7 @@ export default function LoginAndRegister() {
     })
     .then(res=>{
       if(res.status==200 || res.status==201){
-        swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی',()=>{});
+        swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی',()=>window.location.href ='/');
       }else{
         swal('ثبت نام','ثبت نام با موفقیت انجام نشد','warrning','باشه',()=>window.location.href ='/register')
       }

@@ -3,14 +3,13 @@ const db = require("../db/MyIrancellDB.js");
 const userRouter = express.Router();
 const registerRouter = express.Router();
 const getinfo = express.Router();
+const mypanel=express.Router()
+const changeinfo=express.Router()
 const getUserId = require("../utils/funcs.js");
 
 // const jwt = require("jsonwebtoken");
 // کلید اختصاصی برای امضای توکن
 // let secretKey = process.env.JWT_SECRET;
-
-
-
 
 db.connect((err) => {
   if (err) {
@@ -19,6 +18,7 @@ db.connect((err) => {
     console.log("db vasl shod");
   }
 });
+
 // getuser
 // userRouter.get("/users", (req, res) => {
 //   if (req.path == "/users") {
@@ -44,14 +44,43 @@ userRouter.get("/register", (req, res) => {
         console.log(err);
         res.send(JSON.stringify("not user"));
       } else {
-        // console.log(response);
         res.send(JSON.stringify(response));
       }
     });
   }
 });
 
-// get one register user
+///////////////////////////////////////////////////////// change user info mypanel
+changeinfo.put("/mypanel/edite", (req, res) => {
+  let id=req.headers.authorization.split(',')[2]
+  let updateInfoUser = `UPDATE register SET username=?,password=? WHERE id=${id}`;
+  if (req.path == "/mypanel/edite") {
+    db.query(updateInfoUser,[req.headers.authorization.split(',')[0],req.headers.authorization.split(',')[1]],(err,response)=>{
+      if(err){
+        console.log(err);
+        res.status(400).json({message:'can not find user registered'})
+      }else{
+        res.send(JSON.stringify(response))
+      }
+    })
+  }
+});
+///////////////////////////////////////////////////////// get user id mypanel
+mypanel.post("/mypanel", (req, res) => {
+  let queryRegistered = `SELECT id FROM register WHERE username=? AND password=?`;
+  if (req.path == "/mypanel") {
+    db.query(queryRegistered,[req.headers.authorization.split(',')[0],req.headers.authorization.split(',')[1]],(err,response)=>{
+      if(err){
+        console.log(err);
+        res.status(400).json({message:'can not find user registered'})
+      }else{
+        res.send(JSON.stringify(response))
+      }
+    })
+  }
+});
+
+// get data one register user
 getinfo.post("/getinfo", (req, res) => {
   let queryRegistered = `SELECT * FROM register WHERE username=? AND password=?`;
   if (req.path == "/getinfo") {
@@ -112,5 +141,5 @@ registerRouter.post("/register", (req, res) => {
   }
 });
 
-module.exports = { userRouter, registerRouter ,getinfo };
+module.exports = { userRouter, registerRouter ,getinfo ,mypanel,changeinfo };
  

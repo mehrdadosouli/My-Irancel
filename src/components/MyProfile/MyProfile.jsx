@@ -5,7 +5,7 @@ import CenterBoxPanel from '../MyPacket/CenterBoxPanel'
 
 export default function MyProfile() {
   return (
-    <div className='bg-white-200 h-[100vh] min-h-[50rem] flex justify-between lg:flex-row flex-col'>
+    <div className='bg-white-200 min-h-[50rem] flex justify-between lg:flex-row flex-col'>
         <div>
           <RightSide />
         </div>

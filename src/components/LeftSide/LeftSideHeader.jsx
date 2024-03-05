@@ -17,7 +17,7 @@ export default function LeftSideHeader() {
     .then(data=>setUserInfo(data))
   },[]);
   return (
-    <div className="flex p-10 bg-white-50 justify-center rounded-3xl gap-10 border border-gold-400">
+    <div className="flex p-10 bg-white-50 lg:justify-center justify-between items-center rounded-3xl lg:gap-10 gap-52 border border-gold-400">
       <div className="w-[5rem] h-[5rem] object-cover rounded-full overflow-hidden border-4 border-gold-400">
         {userInfo.length ? (
           <Link to='/myprofile'><img src={img1} alt="" /></Link>
@@ -25,14 +25,14 @@ export default function LeftSideHeader() {
           <img src={img1} alt="photo" />
         )}
       </div>
-      <div className="flex flex-col text-left w-52 justify-center">
+      <div className="flex lg:flex-col gap-10 text-left lg:w-52 justify-center">
         {!userInfo.length ? (
           <>
             <Link to="/register">ثبت نام / ورود</Link>
           </>
         ) : (
           <>
-           <Link to='/myprofile'><h3>سلام {userInfo[0].username }{ userInfo[0].userfamily}</h3></Link>
+           <Link to='/myprofile'><h3>سلام { userInfo[0].username } { userInfo[0].userfamily}</h3></Link>
             <span>{userInfo[0].phone}</span>
           </>
         )}

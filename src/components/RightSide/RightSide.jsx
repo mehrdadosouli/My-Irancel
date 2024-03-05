@@ -5,7 +5,6 @@ import { TfiClose } from "react-icons/tfi";
 
 export default function RightSide() {
   const [isShow,setIsShow]=useState(false)
-  console.log(isShow);
   return (
     <div className='relative lg:ml-10'>
       <div className={`p-5 flex lg:hidden mx-auto h-14 justify-center items-center absolute top-5 right-5 z-20 hover:cursor-pointer text-gold-50 bg-orange-400 rounded-2xl hover:text-black`} onClick={()=>{setIsShow(!isShow)}}>

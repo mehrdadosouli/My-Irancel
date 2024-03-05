@@ -15,10 +15,15 @@ function App() {
   },[])   
   return (
     <>
-      <div className="flex md:flex-row flex-col lg:flex-row min-h-[50rem] bg-white-300">
+      <div className="flex flex-col lg:flex-row min-h-[50rem] bg-white-300">
         <RightSide />
+        <div className="lg:hidden flex ">
+         <LeftSide />
+        </div>
         <CenterSide />
-        <LeftSide />
+        <div className="lg:flex hidden">
+         <LeftSide />
+        </div>
       </div>
     </>
   );

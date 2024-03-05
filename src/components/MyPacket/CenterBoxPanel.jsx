@@ -39,8 +39,8 @@ export default function CenterBoxPanel() {
         }
     },[])
   return (
-    <div className='flex flex-col gap-10 my-10 p-10 rounded-3xl border border-gold-400 justify-evenly'>
-            <h1 className='text-center border border-b-1 border-b-blue-200 border-transparent p-5 mt-[-5rem]'>پروفایل من</h1>
+    <div className='flex flex-col gap-10 my-10 p-10 rounded-3xl border border-gold-400 justify-evenly w-full'>
+            <h1 className='text-center border border-b-1 border-b-blue-200 border-transparent lg:p-5 lg:mt-[-5rem]'>پروفایل من</h1>
     <form action="#" className='flex flex-col gap-28'>
         <div className='flex gap-40 justify-between'>
             <span>عکس پروفایل خود را اظافه کنید</span>

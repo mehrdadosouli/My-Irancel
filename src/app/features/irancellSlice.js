@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState={
-    userInfo:[]
+    userInfo:[],
+    id:''
 }
 
 const irancellSlice=createSlice({
@@ -9,9 +10,12 @@ const irancellSlice=createSlice({
     reducers:{
         addUser:(state,action)=>{
             state.userInfo=action.payload
+        },
+        addid:(state,action)=>{
+            state.id=action.payload
         }
     }
 })
 
 export default irancellSlice.reducer
-export const {addUser}=irancellSlice.actions
+export const {addUser,addid}=irancellSlice.actions

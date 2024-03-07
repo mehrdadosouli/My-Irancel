@@ -4,8 +4,11 @@ import img1 from "../../assets/1.jpg";
 import { getFromLocalStorage } from "../../utils/funcs.js"
 export default function LeftSideHeader() {
   const [userInfo, setUserInfo] = useState([]);
+
+   
+  const user=JSON.parse(getFromLocalStorage('user'))
   useEffect(() => {
-    const user=JSON.parse(getFromLocalStorage('user'))
+
     fetch("http://localhost:5000/getinfo",{
       method:'POST', 
       headers:{

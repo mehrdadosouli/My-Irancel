@@ -88,8 +88,8 @@ export default function LoginAndRegister() {
       ToastService.error(' یوزر خود را وارد کنید')
     }else if(!login.password.length){
       ToastService.error('پسورد را وارد کنید')
-    }
-    console.log(logined);
+    }else{
+
     try {
     fetch('http://localhost:5000/login',{
       method:'POST',
@@ -114,6 +114,7 @@ export default function LoginAndRegister() {
       console.log('نتوانست ارسال کند');
     }
   }
+}
 
 
   /////////////////////////////////////////////////////////////////

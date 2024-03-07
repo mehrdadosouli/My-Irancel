@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { getFromLocalStorage, setToLocalStorage, swal } from '../../utils/funcs'
+import { useDispatch } from 'react-redux'
+import { addUser } from '../../app/features/irancellSlice.js';
 export default function CenterBoxPanel() {
     const [newInfoUser,setNewInfoUser]=useState([])
+    const dispatch=useDispatch()
     const [id,setId]=useState()
     const [info,setInfo]=useState({
         username:'',
@@ -26,8 +29,21 @@ export default function CenterBoxPanel() {
                 'Authorization': `${info.username},${info.password},${info.profile},${id[0].id}`
             },
         })
-        .then(res=>{swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>{console.log(res);setToLocalStorage('user',info)});return res.json()})
-    }
+        .then(res=>{
+            if(res.status==200 || res.status==201){
+                swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>{
+                    setToLocalStorage('user',info);
+                })
+            }else{
+                swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر نیافت', 'error', 'باشه',()=>{})
+            }        
+            return res.json()
+    })
+    .then(result=>{
+        console.log(result);
+        dispatch(addUser(info))
+    })
+  }
     useEffect(()=>{
         try {
             let result=JSON.parse(getFromLocalStorage('user'))
@@ -39,7 +55,7 @@ export default function CenterBoxPanel() {
             }
         })
         .then(res=>res.json())
-        .then(ids=>setId(ids))
+        .then(ids=>{dispatch(addUser(info));return setId(ids)})
         } catch (error) {
             console.log('cant fetch mypanel',error);
         }

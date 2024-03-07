@@ -51,17 +51,17 @@ userRouter.get("/register", (req, res) => {
 });
 ///////////////////////////////////////////////////////// change user info mypanel  
 changeinfo.put("/mypanel/edite", (req, res) => {
-  let id=req.headers.authorization.split(',')[2]
+  let id=req.headers.authorization.split(',')[3]
+  console.log('id',id);
   let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE id=${id}`;
   if (req.path == "/mypanel/edite") {
     db.query(updateInfoUser,[req.headers.authorization.split(',')[0],req.headers.authorization.split(',')[1],req.headers.authorization.split(',')[2]],(err,response)=>{
-      console.log(response);
-      // if(err){
-      //   console.log(err);
-      //   res.status(400).json({message:'can not find user registered'})
-      // }else{
-      //   res.send(JSON.stringify(response))
-      // }
+
+      if(err){
+        res.status(400).json({message:'can not connect database'})
+      }else{
+        res.send(JSON.stringify('با موفقیت بروز شد'))
+      }
     })
   }
 });
@@ -88,14 +88,19 @@ getinfo.post("/getinfo", (req, res) => {
         console.log(err);
         res.status(400).json({message:'can not find user registered'})
       }else{
+      if(response.length){
+        console.log(response);
         res.send(JSON.stringify(response))
+      }else{
+        console.log('error');
       }
+    }
     })
   }
 });
 ///////////////////////////////////////////////////////// login user  
 login.post("/login", (req, res) => {
-  let updateInfoUser = `SELECT * FROM register WHERE (username=? AND password=?) OR (username=? OR password=?)`;
+  let updateInfoUser = `SELECT * FROM register WHERE username=? AND password=?`;
   if (req.path == "/login") {
     db.query(updateInfoUser,[req.body.username , req.body.password],(err,response)=>{
       if(err){

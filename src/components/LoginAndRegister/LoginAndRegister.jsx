@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import  { swal,ToastService,validInputsRegister,setToLocalStorage } from '../../utils/funcs.js'
+import  { swal,ToastService,validInputsRegister,setToLocalStorage, getFromLocalStorage } from '../../utils/funcs.js'
 
 export default function LoginAndRegister() {
   
@@ -13,6 +13,10 @@ export default function LoginAndRegister() {
     password:'',
     phone:'',
   })
+  const [login,setLogin]=useState({
+    username:'',
+    password:'',
+  })
   useEffect(()=>{
     setErr(validInputsRegister(registered))
   },[registered]) 
@@ -20,6 +24,17 @@ export default function LoginAndRegister() {
   const changeHandlerRegister=(event)=>{
       setRegistered(prev=>({...prev,[event.target.name]:event.target.value}))
   }
+  const changeHandlerLogin=(event)=>{
+    setLogin(prev=>({...prev,[event.target.name]:event.target.value}))
+  }
+  let allRegistered={
+    username:registered.username.trim(),
+    userfamily:registered.userfamily.trim(),
+    password:registered.password.trim(),
+    phone:registered.phone.trim(),
+  }
+ 
+  ////////////////////////////////////////////////////// register
   const submitSignUpHandler=(event)=>{
     event.preventDefault()
     if(Object.keys(err).length==4){
@@ -28,12 +43,6 @@ export default function LoginAndRegister() {
       Object.values(err).forEach(elem=>ToastService.error(elem))
     }
     if(!Object.keys(err).length){
-    let allRegistered={
-      username:registered.username.trim(),
-      userfamily:registered.userfamily.trim(),
-      password:registered.password.trim(),
-      phone:registered.phone.trim(),
-    }
     try {
 
       fetch('http://localhost:5000/register',{
@@ -46,9 +55,9 @@ export default function LoginAndRegister() {
     .then(res=>{
       if(res.status==200 || res.status==201){
         swal('ثبت نام', 'ثبت نام با موفقیت انجام شد', 'success', 'عالی',()=>window.location.href ='/');
-      }else{
-        swal('ثبت نام','ثبت نام با موفقیت انجام نشد','warrning','باشه',()=>window.location.href ='/register')
-      }
+      }else if(res.status == 402){
+        swal('ثبت نام','همچین یوزری قبلا ثبت نام کرده است','warrning','باشه',()=>{})
+      } 
       ;return res.json()
     })
     .then(data=>setToLocalStorage('user',data))
@@ -57,18 +66,61 @@ export default function LoginAndRegister() {
     }catch (error) {
       console.log(error,'نتوانست ارسال کند');
     }
-
-    }else{
+  }else{
       console.log(err);
     }
   }
+
+
+  /////////////////////////////////////////////////////// login user
+
   const submitLoginHandler=(event)=>{
+    event.preventDefault()
     
+    let logined={
+      username:login.username.trim(),
+      password:Number(login.password.trim()),
+    }
+    
+    if(!login.username.length && !login.password.length){
+      ToastService.error('اینپوت ها را بررسی کنید')
+    }else if(!login.username.length){
+      ToastService.error(' یوزر خود را وارد کنید')
+    }else if(!login.password.length){
+      ToastService.error('پسورد را وارد کنید')
+    }
+    console.log(logined);
+    try {
+    fetch('http://localhost:5000/login',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      body:JSON.stringify(logined)
+    })
+    .then(res=>{
+      if(res.status==200 || res.status==201){
+        swal('ورود','ورود با موفقیت انجام شد', 'success', 'عالی',()=>{
+            setToLocalStorage('user',logined)
+            window.location.href ='/'
+        });
+      }else{
+        swal('ورود','همچین کاربری وجود ندارد','warrning','باشه',()=>{})
+      }
+      ;return res.json()
+    })
+    .then(data=>console.log(data))
+    }catch (error) {
+      console.log('نتوانست ارسال کند');
+    }
   }
-  const signUpHandler=(event)=>{
+
+
+  /////////////////////////////////////////////////////////////////
+  const signUpHandler=()=>{
     setFormName('signup')
   }
-  const loginHandler=(event)=>{
+  const loginHandler=()=>{
     setFormName('login')
   }
 
@@ -79,8 +131,8 @@ export default function LoginAndRegister() {
           <h1 className='mx-auto p-3 text-white-50 hover:cursor-pointer w-fit' onClick={loginHandler}>Login</h1>
           <form action="#" className='flex flex-col gap-10 [&>*]:p-5 [&>*]:rounded-2xl [&>*]:outline-0 [&>*]:placeholder:text-lg'>
             
-            <input autoComplete='on' type="text" name="username" id="usernamelogin"placeholder='نام' />
-            <input autoComplete='on' type="number" name="phone" id="phonelogin" placeholder='شماره موبایل'/>
+            <input autoComplete='on' type="text" name="username" id="usernamelogin"placeholder='نام' onChange={changeHandlerLogin} />
+            <input autoComplete='on' type="text" name="password" id="passwordlogin" placeholder='پسورد' onChange={changeHandlerLogin}/>
             <button onClick={submitLoginHandler} className='p-10 bg-purple-300 text-white-50 hover:text-blue-400'>Login</button>
           </form>
 

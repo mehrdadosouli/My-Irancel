@@ -5,22 +5,28 @@ export default function CenterBoxPanel() {
     const [id,setId]=useState()
     const [info,setInfo]=useState({
         username:'',
-        password:''
+        password:'',
+        profile:null
     })
     const changeInputHandler=(event)=>{
-        setInfo(prev=>({...prev,[event.target.name]:event.target.value}))
+        if(event.target.name == 'profile'){
+            setInfo(prev=>({...prev,[event.target.name]:event.target.files[0].name}))
+        }else{
+            setInfo(prev=>({...prev,[event.target.name]:event.target.value}))
+        }
     }
     const changeInfoUserHandler=(e)=>{
         e.preventDefault()
-        console.log(id[0]);
+        // const formData = new FormData();
+        // formData.append('profile', info.profile); // Assuming info.profile is the file object
         fetch('http://localhost:5000/mypanel/edite',{
             method:'PUT',
             headers:{
                 'Content-Type':'application/json',
-                'Authorization': `${info.username},${info.password},${id[0].id}`
-            }
+                'Authorization': `${info.username},${info.password},${info.profile},${id[0].id}`
+            },
         })
-        .then(res=>{swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>setToLocalStorage('user',info));return res.json()})
+        .then(res=>{swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>{console.log(res);setToLocalStorage('user',info)});return res.json()})
     }
     useEffect(()=>{
         try {
@@ -44,7 +50,7 @@ export default function CenterBoxPanel() {
     <form action="#" className='flex flex-col gap-28'>
         <div className='flex gap-40 justify-between'>
             <span>عکس پروفایل خود را اظافه کنید</span>
-            <input type="file" id='profile' value={info.profile} name='profile' onChange={changeInputHandler} className='inline-flex w-[22rem]'/>
+            <input type="file" id='profile' name='profile' onChange={changeInputHandler} className='inline-flex w-[22rem]'/>
         </div>
         <div className='flex gap-10 justify-between'>
             <span>نام کاربری خود را تغییر دهید</span>

@@ -3,9 +3,11 @@ import LeftSide from "./components/LeftSide/LeftSide";
 import CenterSide from "./components/CenterSide/CenterSide";
 import RightSide from "./components/RightSide/RightSide";
 import { addUser } from './app/features/irancellSlice.js';
+import { useDispatch } from "react-redux";
+
 function App() {
 
-
+  const dispatch=useDispatch()
   useEffect(()=>{
     fetch('http://localhost:5000/register')
     .then(res=>res.json())

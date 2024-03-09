@@ -52,7 +52,6 @@ userRouter.get("/register", (req, res) => {
 ///////////////////////////////////////////////////////// change user info mypanel  
 changeinfo.put("/mypanel/edite", (req, res) => {
   let id=req.headers.authorization.split(',')[3]
-  console.log('id',id);
   let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE id=${id}`;
   if (req.path == "/mypanel/edite") {
     db.query(updateInfoUser,[req.headers.authorization.split(',')[0],req.headers.authorization.split(',')[1],req.headers.authorization.split(',')[2]],(err,response)=>{
@@ -83,13 +82,13 @@ mypanel.post("/mypanel", (req, res) => {
 getinfo.post("/getinfo", (req, res) => {
   let queryRegistered = `SELECT * FROM register WHERE username=? AND password=?`;
   if (req.path == "/getinfo") {
+    console.log(req.body);
     db.query(queryRegistered,[req.body.username,req.body.password],(err,response)=>{
       if(err){
         console.log(err);
         res.status(400).json({message:'can not find user registered'})
       }else{
       if(response.length){
-        console.log(response);
         res.send(JSON.stringify(response))
       }else{
         console.log('error');
@@ -108,7 +107,6 @@ login.post("/login", (req, res) => {
         res.status(400).json({message:'can not connect database '})
       }else{
         if(response.length>0){
-          console.log(response);
           res.send(JSON.stringify(response))
         }else{
           res.status(400).json({message:'can not find user'})
@@ -128,7 +126,6 @@ registerRouter.post("/register", (req, res) => {
             return res.status(500).json({ message: "خطا در اتصال" });
         }else {
             if(result.length){
-              console.log(result);
               res.status(402).json({message:'همچین یوزری قبلا ثبت نام کرده است'})
             }else{
               db.query(queryInsert, req.body, (error, respons) => {

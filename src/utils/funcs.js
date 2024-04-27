@@ -63,4 +63,6 @@ const getFromLocalStorage=(key)=>{
   return localStorage.getItem(key)
 }
 
+
+
 export { swal, ToastService,validInputsRegister,setToLocalStorage,getFromLocalStorage };

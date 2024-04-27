@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import  { swal,ToastService,validInputsRegister,setToLocalStorage, getFromLocalStorage } from '../../utils/funcs.js'
-
 export default function LoginAndRegister() {
   
   const [formName,setFormName]=useState('login')
@@ -48,7 +47,7 @@ export default function LoginAndRegister() {
       fetch('http://localhost:5000/register',{
       method:'POST',
       headers:{
-        'Content-Type':'application/json',
+        'Content-Type':'application/json'
       },
       body:JSON.stringify(allRegistered)
     })

@@ -35,22 +35,20 @@ const options = {
 };
 export default function CenterSide() {
   return (
-    <div className="flex flex-col gap-10 lg:mx-0 mx-10">
-      <div className="relative mt-10">
-        <img
-          src="https://irancell.ir/wp-content/uploads/2024/02/Web-Banner-1680x840-CTA-EN.jpg"
-          alt=""
-          className="rounded-2xl h-96 w-[100vw] object-cover object-center md:object-right"
-        />
+    <div className="flex flex-col gap-10 lg:mx-0 mx-auto lg:w-[100%] w-[80%]">
+      <div className="relative mt-10 ">
+        <img src="https://irancell.ir/wp-content/uploads/2024/02/Web-Banner-1680x840-CTA-EN.jpg" alt="" className="rounded-2xl h-96 w-full object-cover object-center md:object-right" />
       </div>
       <div className="bg-white-50 p-10 rounded-3xl">
         <h3>نمودار میزان مصرف اینترنت</h3>
-        <Line
-          data={data}
-          options={options}
-          plugins={[Chart]}
-          className="w-full"
-        />
+
+          <Line
+            data={data}
+            options={options}
+            plugins={[Chart]}
+            className="w-full"
+          />
+
       </div>
       <div>
         <BoxSuggest />

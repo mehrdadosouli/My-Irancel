@@ -16,7 +16,6 @@ export default function LeftSideHeader() {
     }) 
     .then(res=>res.json())
     .then(data=>setUserInfo(data))
-    console.log('userInfo'); 
   },[]);
   const memorizeInfo=useMemo(()=>userInfo, [userInfo])
   return (

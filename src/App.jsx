@@ -16,14 +16,20 @@ function App() {
   return (
     <>
       <div className="flex flex-col lg:flex-row min-h-[50rem] bg-white-300">
-        <RightSide />
-        <div className="lg:hidden flex ">
-         <LeftSide />
+        <div className="flex">
+          <RightSide />
         </div>
-        <CenterSide />
+        <div className="flex lg:hidden">
+          <LeftSide />
+        </div>
+        <div className="flex">
+          <CenterSide />
+        </div>
         <div className="lg:flex hidden">
-         <LeftSide />
+          <LeftSide />
         </div>
+        
+        
       </div>
     </>
   );

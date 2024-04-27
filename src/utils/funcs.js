@@ -55,7 +55,7 @@ else if(registered.phone.length !== 11){
 };
 
 const setToLocalStorage=(key,value)=>{
-  return localStorage.setItem(key,JSON.stringify({username:value.username,password:value.password}))
+  return localStorage.setItem(key,JSON.stringify({username:value.username,token:value.token}))
 }
 
 

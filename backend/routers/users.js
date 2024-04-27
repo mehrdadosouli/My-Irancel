@@ -138,33 +138,6 @@ login.post("/login", (req, res) => {
   }
 });
 //////////////////////////////////////////////////////// register
-// registerRouter.post("/register", (req, res) => {
-//   if (req.path == "/register") {
-//     let hasUserInDb = `SELECT * FROM register WHERE username=? AND password=?`;
-//     let queryInsert = `INSERT INTO register SET ?`;
-//     db.query(hasUserInDb,[req.body.username,req.body.password], (errs, result) => {
-//         if (errs) {
-//             console.log("خطا در  اتصال");
-//             return res.status(500).json({ message: "خطا در اتصال" });
-//         }else {
-//             if(result.length){
-//               res.status(402).json({message:'همچین یوزری قبلا ثبت نام کرده است'})
-//             }else{
-//               db.query(queryInsert, req.body, (error, respons) => {
-//                 if (error) {
-//                   console.log("error");
-//                   res.status(402).json({message:'خطا در ثبت نام دوباره سعی کنید'})
-//                 } else {
-//                   console.log("user is successfuly add to database");
-//                    res.send(JSON.stringify(req.body));
-//                 }
-//               });
-//             }
-//           }
-//     })
-
-//   }
-// });
 
 registerRouter.post("/register", (req, res) => {
   let registerUser = `INSERT INTO register (id, username, userfamily, phone, password, profile, token) VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -177,17 +150,16 @@ registerRouter.post("/register", (req, res) => {
     let profile='1.jpg'
     getUserId(username, password)
       .then((result) => {
-        console.log("result", result);
         if (!result.length) {
           db.query(registerUser,[null,username,userfamily,phone,password,profile,generatorToken], (err, response) => {
-             return res.send(JSON.stringify(req.body))
+             res.send(JSON.stringify({token:generatorToken,username,userfamily,phone}))
           });
         } else {
-          res.status(402).send("ghablan register shode");
+          res.status(402).json({message:'همچین یوزری قبلا ثبت نام کرده است'})
         }
       })
       .catch((err) => {
-        res.status(401).send(err);
+        res.status(402).json({message:'خطا در ثبت نام دوباره سعی کنید'})
       });
   }
 });

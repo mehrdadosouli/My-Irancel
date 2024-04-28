@@ -141,8 +141,8 @@ export default function LoginAndRegister() {
           <form action="#" className='flex flex-col gap-10 [&>*]:p-5 [&>*]:rounded-2xl [&>*]:outline-0 [&>*]:placeholder:text-lg'>
             <input autoComplete='on' type="text" onChange={changeHandlerRegister} value={registered.username} name="username" id="usernamesignup"placeholder='نام' />
             <input autoComplete='on' type="text" onChange={changeHandlerRegister} value={registered.userfamily} name="userfamily" id="userfamilysignup"placeholder='نام خانوادگی' />
-            <input autoComplete='on' type="text" onChange={changeHandlerRegister} value={registered.password} name="password" id="passwordsignup"placeholder='پسورد' />
-            <input autoComplete='on' type="text" onChange={changeHandlerRegister} value={registered.phone} name="phone" id="phonesignup" placeholder='شماره موبایل'/>
+            <input autoComplete='on' type="password" onChange={changeHandlerRegister} value={registered.password} name="password" id="passwordsignup"placeholder='پسورد' />
+            <input autoComplete='on' type="number" onChange={changeHandlerRegister} value={registered.phone} name="phone" id="phonesignup" placeholder='شماره موبایل'/>
             <button onClick={submitSignUpHandler} className='p-10 bg-purple-300 text-white-50 hover:text-blue-400'>Sign Up</button>
           </form>
         </div>

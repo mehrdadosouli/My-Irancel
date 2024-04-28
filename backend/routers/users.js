@@ -6,8 +6,8 @@ const getinfo = express.Router();
 const mypanel = express.Router();
 const changeinfo = express.Router();
 const login = express.Router();
-const { getUserId, generateToken } = require("../utils/funcs.js");
-
+const { getUserId, generateToken, getUserID } = require("../utils/funcs.js");
+const getPacket_services = express.Router();
 // const jwt = require("jsonwebtoken");
 // کلید اختصاصی برای امضای توکن
 // let secretKey = process.env.JWT_SECRET;
@@ -35,7 +35,26 @@ db.connect((err) => {
 //   }
 // });
 
-// get Allregister user
+///////////////////////////////////////////////////get all packet_services user
+
+getPacket_services.get("/packet", (req, res) => {
+  let token = req.headers.authorization;
+  getUserID(token).then((result) => {
+    console.log(result);
+    let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
+    if (req.path == "/packet") {
+      db.query(query_packet, [result[0].id], (err, response) => {
+        if (err) {
+          res.send(JSON.stringify(err.sqlMessage));
+        } else {
+          res.status(200).send(response);
+        }
+      });
+    }
+  });
+});
+
+////////////////////////////////////////////////////////// get Allregister user
 userRouter.get("/register", (req, res) => {
   if (req.path == "/register") {
     let queryRegistered = `SELECT * FROM register`;
@@ -92,14 +111,13 @@ mypanel.post("/mypanel", (req, res) => {
     );
   }
 });
-// get data one register user
+/////////////////////////////////////////////////// get data one register user
 getinfo.post("/getinfo", (req, res) => {
-  let queryRegistered = `SELECT * FROM register WHERE username=? AND password=?`;
+  let queryInfo = `SELECT * FROM register WHERE username=? AND token=?`;
   if (req.path == "/getinfo") {
-    console.log(req.body);
     db.query(
-      queryRegistered,
-      [req.body.username, req.body.password],
+      queryInfo,
+      [req.body.username, req.body.token],
       (err, response) => {
         if (err) {
           console.log(err);
@@ -109,6 +127,7 @@ getinfo.post("/getinfo", (req, res) => {
             res.send(JSON.stringify(response));
           } else {
             console.log("error");
+            res.status(402).send(err);
           }
         }
       }
@@ -147,19 +166,41 @@ registerRouter.post("/register", (req, res) => {
     let userfamily = req.body.userfamily;
     let password = req.body.password;
     let phone = req.body.phone;
-    let profile='1.jpg'
+    let profile = "1.jpg";
     getUserId(username, password)
       .then((result) => {
+        console.log(result);
         if (!result.length) {
-          db.query(registerUser,[null,username,userfamily,phone,password,profile,generatorToken], (err, response) => {
-             res.send(JSON.stringify({token:generatorToken,username,userfamily,phone}))
-          });
+          db.query(
+            registerUser,
+            [
+              null,
+              username,
+              userfamily,
+              phone,
+              password,
+              profile,
+              generatorToken,
+            ],
+            (err, response) => {
+              res.send(
+                JSON.stringify({
+                  token: generatorToken,
+                  username,
+                  userfamily,
+                  phone,
+                })
+              );
+            }
+          );
         } else {
-          res.status(402).json({message:'همچین یوزری قبلا ثبت نام کرده است'})
+          res
+            .status(402)
+            .json({ message: "همچین یوزری قبلا ثبت نام کرده است" });
         }
       })
       .catch((err) => {
-        res.status(402).json({message:'خطا در ثبت نام دوباره سعی کنید'})
+        res.status(402).json({ message: "خطا در ثبت نام دوباره سعی کنید" });
       });
   }
 });
@@ -171,4 +212,5 @@ module.exports = {
   mypanel,
   changeinfo,
   login,
+  getPacket_services,
 };

@@ -53,17 +53,13 @@ userRouter.get("/register", (req, res) => {
 });
 ///////////////////////////////////////////////////////// change user info mypanel
 changeinfo.put("/mypanel/edite", (req, res) => {
-  let id = req.headers.authorization.split(",")[3];
-  let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE id=${id}`;
+  let token = req.headers.authorization.split(",")[3];
+  let profile = req.headers.authorization.split(",")[2];
+  let password = req.headers.authorization.split(",")[1];
+  let username = req.headers.authorization.split(",")[0];
+  let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE token=?`;
   if (req.path == "/mypanel/edite") {
-    db.query(
-      updateInfoUser,
-      [
-        req.headers.authorization.split(",")[0],
-        req.headers.authorization.split(",")[1],
-        req.headers.authorization.split(",")[2],
-      ],
-      (err, response) => {
+    db.query(updateInfoUser,[username,password,profile,token ],(err, response) => {
         if (err) {
           res.status(400).json({ message: "can not connect database" });
         } else {

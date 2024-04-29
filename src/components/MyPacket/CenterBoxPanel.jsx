@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getFromLocalStorage, setToLocalStorage, swal } from '../../utils/funcs'
 import { useDispatch } from 'react-redux'
 import { addUser } from '../../app/features/irancellSlice.js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 // import { EditeMyProfile } from '../../services/EditeMyProfile.jsx';
 export default function CenterBoxPanel() {
     const [newInfoUser,setNewInfoUser]=useState([])
@@ -16,16 +16,21 @@ export default function CenterBoxPanel() {
     const formData = new FormData();
     formData.append('profile', info.profile);
     const getFrom=JSON.parse(getFromLocalStorage('user')).token
-    const {mutate}=useMutation((info)=>{
+    const queryClient = useQueryClient();
+    const {mutate}=useMutation(['courses'],(info)=>{
         return fetch('http://localhost:5000/mypanel/edite',{
            method:'PUT',
            headers:{
              'Content-Type':'application/json',
              'Authorization':`${info.username},${info.password},${info.profile},${getFrom}`
-           },
-           body:JSON.stringify(info)
-         }).then(res=>{console.log(res);res.json()})
-     })
+           }
+         }).then(res=>res.json())
+     }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries();
+            window.location.reload();
+        }
+    })
     const changeInputHandler=(event)=>{
         if(event.target.name == 'profile'){
             setInfo(prev=>({...prev,[event.target.name]:event.target.files[0].name}))
@@ -33,10 +38,15 @@ export default function CenterBoxPanel() {
             setInfo(prev=>({...prev,[event.target.name]:event.target.value}))
         }
     }
+    
     const changeInfoUserHandler=(e)=>{
         e.preventDefault()
         
-        mutate(info)
+        try {
+            mutate(info)
+        } catch (error) {
+            
+        }
         // const formData = new FormData();
         // formData.append('profile', info.profile); // Assuming info.profile is the file object
         // fetch('http://localhost:5000/mypanel/edite',{

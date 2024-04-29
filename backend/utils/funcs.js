@@ -18,7 +18,7 @@ const getUserId = (username, password) => {
   });
 };
 
-const getUserID = (token) => {
+const getID = (token) => {
   return new Promise((resolve, reject) => {
     let queryId = `SELECT id FROM register WHERE token=?`;
     db.query(queryId, [token], (err, res) => {
@@ -50,5 +50,5 @@ const generateToken = () => {
 module.exports = {
   getUserId,
   generateToken,
-  getUserID,
+  getID,
 };

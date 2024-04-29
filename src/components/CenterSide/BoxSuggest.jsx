@@ -3,9 +3,10 @@ import { getFromLocalStorage } from "../../utils/funcs";
 import { useQuery } from "@tanstack/react-query";
 
 export default function BoxSuggest() {
+  const [dataPacket,setDataPacket]=useState([])
   var local = getFromLocalStorage("user");
   var tokens = JSON.parse(local).token;
-  const { data, isLoading } = useQuery(
+  const { data, isLoading,isFetching } = useQuery(
     ["Packet"],
     () => {
       return fetch("http://localhost:5000/packet", {
@@ -21,11 +22,8 @@ export default function BoxSuggest() {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       retry: 1,
-      // cacheTime:10000
     }
   );
-
-  if (isLoading) return <h1>loading...</h1>;
   return (
     <div className="flex flex-col bg-white-50 p-10 rounded-3xl gap-10 mt-10 ">
       <h4>بسته های پیشنهادی مخصوص خود شما!</h4>
@@ -42,7 +40,6 @@ export default function BoxSuggest() {
           <tbody>
             {data &&
               data.map((elem) => (
-                <>
                   <tr key={elem.id}>
                     <td>14شهریور</td>
                     <td>بسته سه ماهه</td>
@@ -54,7 +51,6 @@ export default function BoxSuggest() {
                       </button>
                     </td>
                   </tr>
-                </>
               ))}
           </tbody>
         </table>

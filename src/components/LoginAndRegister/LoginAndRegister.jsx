@@ -100,15 +100,16 @@ export default function LoginAndRegister() {
     .then(res=>{
       if(res.status==200 || res.status==201){
         swal('ورود','ورود با موفقیت انجام شد', 'success', 'عالی',()=>{
-            setToLocalStorage('user',logined)
-            window.location.href ='/'
+          window.location.href ='/'
         });
       }else{
         swal('ورود','همچین کاربری وجود ندارد','warrning','باشه',()=>{})
       }
       ;return res.json()
+    }).then(data=>{
+      setToLocalStorage('user',{username:data[0].username,token:data[0].token})
     })
-    .then(data=>console.log(data))
+
     }catch (error) {
       console.log('نتوانست ارسال کند');
     }

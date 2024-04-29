@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { getFromLocalStorage, setToLocalStorage, swal } from '../../utils/funcs'
 import { useDispatch } from 'react-redux'
 import { addUser } from '../../app/features/irancellSlice.js';
+import { useMutation } from '@tanstack/react-query';
+// import { EditeMyProfile } from '../../services/EditeMyProfile.jsx';
 export default function CenterBoxPanel() {
     const [newInfoUser,setNewInfoUser]=useState([])
     const dispatch=useDispatch()
@@ -11,6 +13,19 @@ export default function CenterBoxPanel() {
         password:'',
         profile:null
     })
+    const formData = new FormData();
+    formData.append('profile', info.profile);
+    const getFrom=JSON.parse(getFromLocalStorage('user')).token
+    const {mutate}=useMutation((info)=>{
+        return fetch('http://localhost:5000/mypanel/edite',{
+           method:'PUT',
+           headers:{
+             'Content-Type':'application/json',
+             'Authorization':`${info.username},${info.password},${info.profile},${getFrom}`
+           },
+           body:JSON.stringify(info)
+         }).then(res=>{console.log(res);res.json()})
+     })
     const changeInputHandler=(event)=>{
         if(event.target.name == 'profile'){
             setInfo(prev=>({...prev,[event.target.name]:event.target.files[0].name}))
@@ -20,45 +35,48 @@ export default function CenterBoxPanel() {
     }
     const changeInfoUserHandler=(e)=>{
         e.preventDefault()
+        
+        mutate(info)
         // const formData = new FormData();
         // formData.append('profile', info.profile); // Assuming info.profile is the file object
-        fetch('http://localhost:5000/mypanel/edite',{
-            method:'PUT',
-            headers:{
-                'Content-Type':'application/json',
-                'Authorization': `${info.username},${info.password},${info.profile},${id[0].id}`
-            },
-        })
-        .then(res=>{
-            if(res.status==200 || res.status==201){
-                swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>{
-                    setToLocalStorage('user',info);
-                })
-            }else{
-                swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر نیافت', 'error', 'باشه',()=>{})
-            }        
-            return res.json()
-    })
-    .then(result=>{
-        console.log(result);
-        dispatch(addUser(info))
-    })
+        // fetch('http://localhost:5000/mypanel/edite',{
+        //     method:'PUT',
+        //     headers:{
+        //         'Content-Type':'application/json',
+        //         'Authorization': `${info.username},${info.password},${info.profile},${id[0].id}`
+        //     },
+        // })
+        // .then(res=>{
+        //     if(res.status==200 || res.status==201){
+        //         swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر یافت', 'success', 'عالی',()=>{
+        //             setToLocalStorage('user',info);
+        //         })
+        //     }else{
+        //         swal('تغییر یوزر و پسورد', ' با موفقیت اطالاعات تغییر نیافت', 'error', 'باشه',()=>{})
+        //     }        
+        //     return res.json()
+    // })
+    // .then(result=>{
+    //     console.log(result);
+    //     dispatch(addUser(info))
+    // })
   }
     useEffect(()=>{
-        try {
-            let result=JSON.parse(getFromLocalStorage('user'))
-            fetch('http://localhost:5000/mypanel',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json',
-                'Authorization': `${result.username},${result.password}`
-            }
-        })
-        .then(res=>res.json())
-        .then(ids=>{dispatch(addUser(info));return setId(ids)})
-        } catch (error) {
-            console.log('cant fetch mypanel',error);
-        }
+        
+        // try {
+        //     let result=JSON.parse(getFromLocalStorage('user'))
+        //     fetch('http://localhost:5000/mypanel',{
+        //     method:'POST',
+        //     headers:{
+        //         'Content-Type':'application/json',
+        //         'Authorization': `${result.username},${result.password}`
+        //     }
+        // })
+        // .then(res=>res.json())
+        // .then(ids=>{dispatch(addUser(info));return setId(ids)})
+        // } catch (error) {
+        //     console.log('cant fetch mypanel',error);
+        // }
     },[])
   return (
     <div className='flex flex-col gap-10 my-10 p-10 rounded-3xl border border-gold-400 justify-evenly w-full'>

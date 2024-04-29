@@ -9,6 +9,7 @@ import MyProfile from "./components/MyProfile/MyProfile.jsx";
 import store from "./app/redux/store.js";
 import { Provider } from "react-redux";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 const queryClient=new QueryClient()
 ReactDOM.createRoot(document.getElementById("root")).render(
 <QueryClientProvider client={queryClient}>
@@ -19,8 +20,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/MyPacket" element={<MyPacket />} />
           <Route path="/register" element={<LoginAndRegister />} />
           <Route path="/MyProfile" element={<MyProfile />} />
-          <Route path="/" element={<App />} />
         </Routes>
+        <ReactQueryDevtools />
     </BrowserRouter>
   </Provider>
 </QueryClientProvider>

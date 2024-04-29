@@ -6,7 +6,7 @@ const getinfo = express.Router();
 const mypanel = express.Router();
 const changeinfo = express.Router();
 const login = express.Router();
-const { getUserId, generateToken, getUserID } = require("../utils/funcs.js");
+const { getUserId, generateToken, getID } = require("../utils/funcs.js");
 const getPacket_services = express.Router();
 // const jwt = require("jsonwebtoken");
 // کلید اختصاصی برای امضای توکن
@@ -35,24 +35,7 @@ db.connect((err) => {
 //   }
 // });
 
-///////////////////////////////////////////////////get all packet_services user
 
-getPacket_services.get("/packet", (req, res) => {
-  let token = req.headers.authorization;
-  getUserID(token).then((result) => {
-    console.log(result);
-    let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
-    if (req.path == "/packet") {
-      db.query(query_packet, [result[0].id], (err, response) => {
-        if (err) {
-          res.send(JSON.stringify(err.sqlMessage));
-        } else {
-          res.status(200).send(response);
-        }
-      });
-    }
-  });
-});
 
 ////////////////////////////////////////////////////////// get Allregister user
 userRouter.get("/register", (req, res) => {
@@ -136,26 +119,32 @@ getinfo.post("/getinfo", (req, res) => {
 });
 ///////////////////////////////////////////////////////// login user
 login.post("/login", (req, res) => {
-  let updateInfoUser = `SELECT * FROM register WHERE username=? AND password=?`;
-  if (req.path == "/login") {
-    db.query(
-      updateInfoUser,
-      [req.body.username, req.body.password],
-      (err, response) => {
-        if (err) {
-          console.log("cant connect database");
-          res.status(400).json({ message: "can not connect database " });
-        } else {
-          if (response.length > 0) {
-            res.send(JSON.stringify(response));
-          } else {
-            res.status(400).json({ message: "can not find user" });
+
+  
+  let updateInfoUser = `SELECT * FROM register WHERE id=?`;
+  getUserId(req.body.username,req.body.password).then(id=> {
+
+    if (req.path == "/login") {
+        db.query(
+            updateInfoUser,
+        [id[0].id],
+        (err, response) => {
+          if(!req.body.username || !req.body.password) {
+            res.status(400).json({error: 'Username and password required'});
           }
-        }
-      }
-    );
-  }
-});
+           if (err) {
+              res.status(500).send(err);
+            } 
+            if(response.length) {
+                  res.send(JSON.stringify(response));
+                }
+              }
+            );
+          }
+        }).catch(err=>{
+          res.status(402).json({ message: "can not find user" })
+        })
+     });
 //////////////////////////////////////////////////////// register
 
 registerRouter.post("/register", (req, res) => {
@@ -203,6 +192,32 @@ registerRouter.post("/register", (req, res) => {
         res.status(402).json({ message: "خطا در ثبت نام دوباره سعی کنید" });
       });
   }
+});
+
+
+
+///////////////////////////////////////////////////get all packet_services user
+
+getPacket_services.get("/packet", (req, res) => {
+  if(req.path=='/packet'){
+  let token = req.headers.authorization;
+  getID(token).then((result) => {
+    console.log('result',result);
+    let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
+    if (req.path == "/packet") {
+      db.query(query_packet, [result[0].id], (err, response) => {
+        if (err) {
+          res.send(JSON.stringify(err.sqlMessage));
+        } else {
+          res.status(200).send(response);
+        }
+      });
+    }
+  }).catch(err => {
+    // handle error
+    res.status(500).json({error: 'Error getting user id'}); 
+  })
+ }
 });
 
 module.exports = {

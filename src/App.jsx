@@ -15,7 +15,7 @@ function App() {
   },[])   
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-[50rem] bg-white-300">
+      <div className="flex flex-col lg:flex-row min-h-[50rem] w-full bg-white-300">
         <div className="flex">
           <RightSide />
         </div>

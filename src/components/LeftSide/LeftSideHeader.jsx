@@ -6,23 +6,32 @@ import { getFromLocalStorage } from "../../utils/funcs.js"
 export default function LeftSideHeader() {
   const [userInfo, setUserInfo] = useState([]);
   useEffect(() => {
-    const user=JSON.parse(getFromLocalStorage('user'))
-    fetch("http://localhost:5000/getinfo",{
-      method:'POST', 
-      headers:{
-        'Content-Type':'application/json',
-      },
-      body:JSON.stringify(user)
-    }) 
-    .then(res=>res.json())
-    .then(data=>setUserInfo(data))
+    const user=JSON.parse(getFromLocalStorage('user')).token
+    if(user){
+     const fetchUser=async()=>{ 
+      const res=await fetch("http://localhost:5000/getinfo",{
+        method:'POST', 
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body:JSON.stringify({token:user})
+      }) 
+      const data=await res.json()
+      setUserInfo(data); 
+    }
+    fetchUser()
+    
+  }else{
+    window.location.href="/register"
+  }
+  
   },[]);
   const memorizeInfo=useMemo(()=>userInfo, [userInfo])
   return (
     <div className="flex p-10 bg-white-50 lg:justify-center justify-between items-center rounded-3xl lg:gap-10 gap-52 border border-gold-400">
       <div className="w-[7rem] h-[7rem] flex justify-center items-center rounded-full overflow-hidden border-4 border-gold-400">
         {memorizeInfo.length ? (
-          <Link to='/myprofile'><img src={`http://localhost:5173/backend/public/${memorizeInfo[0].profile}`} alt="" /></Link> 
+          <Link to='/myprofile'><img src={`http://localhost:5173/backend/public/photos/${memorizeInfo[0].profile}`} alt="" /></Link> 
         ) : (
           <img src={img1} alt="photo" />
         )}

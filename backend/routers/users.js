@@ -57,6 +57,7 @@ changeinfo.put("/mypanel/edite", (req, res) => {
   let profile = req.headers.authorization.split(",")[2];
   let password = req.headers.authorization.split(",")[1];
   let username = req.headers.authorization.split(",")[0];
+  console.log(req.headers.authorization);
   let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE token=?`;
   if (req.path == "/mypanel/edite") {
     db.query(updateInfoUser,[username,password,profile,token ],(err, response) => {
@@ -69,12 +70,12 @@ changeinfo.put("/mypanel/edite", (req, res) => {
     );
   }
 });
+
 ///////////////////////////////////////////////////////// get user id mypanel
 mypanel.post("/mypanel", (req, res) => {
   let queryRegistered = `SELECT id FROM register WHERE username=? AND password=?`;
   if (req.path == "/mypanel") {
-    db.query(
-      queryRegistered,
+    db.query(queryRegistered,
       [
         req.headers.authorization.split(",")[0],
         req.headers.authorization.split(",")[1],
@@ -92,20 +93,17 @@ mypanel.post("/mypanel", (req, res) => {
 });
 /////////////////////////////////////////////////// get data one register user
 getinfo.post("/getinfo", (req, res) => {
-  let queryInfo = `SELECT * FROM register WHERE username=? AND token=?`;
+  let queryInfo = `SELECT * FROM register WHERE token=?`;
   if (req.path == "/getinfo") {
-    db.query(
-      queryInfo,
-      [req.body.username, req.body.token],
-      (err, response) => {
+    db.query(queryInfo,[req.body.token],(err, response) => {
         if (err) {
-          console.log(err);
+          // console.log('err');
           res.status(400).json({ message: "can not find user registered" });
         } else {
           if (response.length) {
             res.send(JSON.stringify(response));
           } else {
-            console.log("error");
+            // console.log("error");
             res.status(402).send(err);
           }
         }
@@ -119,7 +117,6 @@ login.post("/login", (req, res) => {
   
   let updateInfoUser = `SELECT * FROM register WHERE id=?`;
   getUserId(req.body.username,req.body.password).then(id=> {
-
     if (req.path == "/login") {
         db.query(
             updateInfoUser,
@@ -154,7 +151,6 @@ registerRouter.post("/register", (req, res) => {
     let profile = "1.jpg";
     getUserId(username, password)
       .then((result) => {
-        console.log(result);
         if (!result.length) {
           db.query(
             registerUser,
@@ -198,7 +194,6 @@ getPacket_services.get("/packet", (req, res) => {
   if(req.path=='/packet'){
   let token = req.headers.authorization;
   getID(token).then((result) => {
-    console.log('result',result);
     let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
     if (req.path == "/packet") {
       db.query(query_packet, [result[0].id], (err, response) => {
@@ -210,7 +205,6 @@ getPacket_services.get("/packet", (req, res) => {
       });
     }
   }).catch(err => {
-    // handle error
     res.status(500).json({error: 'Error getting user id'}); 
   })
  }

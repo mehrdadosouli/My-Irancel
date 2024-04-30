@@ -11,19 +11,18 @@ export default function CenterBoxPanel() {
     const [info,setInfo]=useState({
         username:'',
         password:'',
-        profile:null
+        profile:null,
+        token:''
     })
-    const formData = new FormData();
-    formData.append('profile', info.profile);
-    const getFrom=JSON.parse(getFromLocalStorage('user')).token
+    
     const queryClient = useQueryClient();
     const {mutate}=useMutation(['courses'],(info)=>{
         return fetch('http://localhost:5000/mypanel/edite',{
            method:'PUT',
            headers:{
              'Content-Type':'application/json',
-             'Authorization':`${info.username},${info.password},${info.profile},${getFrom}`
-           }
+             'Authorization':`${info.username},${info.password},${info.profile},${info.token}`
+           },
          }).then(res=>res.json())
      }, {
         onSuccess: () => {
@@ -72,7 +71,8 @@ export default function CenterBoxPanel() {
     // })
   }
     useEffect(()=>{
-        
+        const getFrom=JSON.parse(getFromLocalStorage('user')).token
+        setInfo(prev=>({...prev,token:getFrom}))
         // try {
         //     let result=JSON.parse(getFromLocalStorage('user'))
         //     fetch('http://localhost:5000/mypanel',{
@@ -88,6 +88,7 @@ export default function CenterBoxPanel() {
         //     console.log('cant fetch mypanel',error);
         // }
     },[])
+
   return (
     <div className='flex flex-col gap-10 my-10 p-10 rounded-3xl border border-gold-400 justify-evenly w-full'>
             <h1 className='text-center border border-b-1 border-b-blue-200 border-transparent lg:p-5 lg:mt-[-5rem]'>پروفایل من</h1>
@@ -109,3 +110,26 @@ export default function CenterBoxPanel() {
     </div>
   )
 }
+
+
+
+// const formData = new FormData();
+// formData.append('profile', info.profile);
+// formData.append('username', info.username);
+// formData.append('password', info.password);
+// const getFrom=JSON.parse(getFromLocalStorage('user')).token
+// const queryClient = useQueryClient();
+// const {mutate}=useMutation(['courses'],(info)=>{
+//     return fetch('http://localhost:5000/mypanel/edite',{
+//        method:'PUT',
+//        headers:{
+//          'Content-Type':'application/json',
+//          'Authorization':`${info.username},${info.password},${info.profile},${getFrom}`
+//        }
+//      }).then(res=>res.json())
+//  }, {
+//     onSuccess: () => {
+//         queryClient.invalidateQueries();
+//         window.location.reload();
+//     }
+// })

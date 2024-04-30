@@ -35,8 +35,6 @@ db.connect((err) => {
 //   }
 // });
 
-
-
 ////////////////////////////////////////////////////////// get Allregister user
 userRouter.get("/register", (req, res) => {
   if (req.path == "/register") {
@@ -57,10 +55,12 @@ changeinfo.put("/mypanel/edite", (req, res) => {
   let profile = req.headers.authorization.split(",")[2];
   let password = req.headers.authorization.split(",")[1];
   let username = req.headers.authorization.split(",")[0];
-  console.log(req.headers.authorization);
   let updateInfoUser = `UPDATE register SET username=? ,password=?, profile=? WHERE token=?`;
   if (req.path == "/mypanel/edite") {
-    db.query(updateInfoUser,[username,password,profile,token ],(err, response) => {
+    db.query(
+      updateInfoUser,
+      [username, password, profile, token],
+      (err, response) => {
         if (err) {
           res.status(400).json({ message: "can not connect database" });
         } else {
@@ -75,7 +75,8 @@ changeinfo.put("/mypanel/edite", (req, res) => {
 mypanel.post("/mypanel", (req, res) => {
   let queryRegistered = `SELECT id FROM register WHERE username=? AND password=?`;
   if (req.path == "/mypanel") {
-    db.query(queryRegistered,
+    db.query(
+      queryRegistered,
       [
         req.headers.authorization.split(",")[0],
         req.headers.authorization.split(",")[1],
@@ -95,49 +96,39 @@ mypanel.post("/mypanel", (req, res) => {
 getinfo.post("/getinfo", (req, res) => {
   let queryInfo = `SELECT * FROM register WHERE token=?`;
   if (req.path == "/getinfo") {
-    db.query(queryInfo,[req.body.token],(err, response) => {
-        if (err) {
-          // console.log('err');
-          res.status(400).json({ message: "can not find user registered" });
-        } else {
-          if (response.length) {
-            res.send(JSON.stringify(response));
-          } else {
-            // console.log("error");
-            res.status(402).send(err);
-          }
-        }
+    db.query(queryInfo, [req.body.token], (err, response) => {
+      if (err) {
+        // console.log('err');
+        res.status(400).json({ message: "can not find user registered" });
+      } else {
+        res.send(JSON.stringify(response));
       }
-    );
+    });
   }
 });
 ///////////////////////////////////////////////////////// login user
 login.post("/login", (req, res) => {
-
-  
   let updateInfoUser = `SELECT * FROM register WHERE id=?`;
-  getUserId(req.body.username,req.body.password).then(id=> {
-    if (req.path == "/login") {
-        db.query(
-            updateInfoUser,
-        [id[0].id],
-        (err, response) => {
-          if(!req.body.username || !req.body.password) {
-            res.status(400).json({error: 'Username and password required'});
+  getUserId(req.body.username, req.body.password)
+    .then((id) => {
+      if (req.path == "/login") {
+        db.query(updateInfoUser, [id[0].id], (err, response) => {
+          if (!req.body.username || !req.body.password) {
+            res.status(400).json({ error: "Username and password required" });
           }
-           if (err) {
-              res.status(500).send(err);
-            } 
-            if(response.length) {
-                  res.send(JSON.stringify(response));
-                }
-              }
-            );
+          if (err) {
+            res.status(500).send(err);
           }
-        }).catch(err=>{
-          res.status(402).json({ message: "can not find user" })
-        })
-     });
+          if (response.length) {
+            res.send(JSON.stringify(response));
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(402).json({ message: "can not find user" });
+    });
+});
 //////////////////////////////////////////////////////// register
 
 registerRouter.post("/register", (req, res) => {
@@ -186,28 +177,28 @@ registerRouter.post("/register", (req, res) => {
   }
 });
 
-
-
 ///////////////////////////////////////////////////get all packet_services user
 
 getPacket_services.get("/packet", (req, res) => {
-  if(req.path=='/packet'){
-  let token = req.headers.authorization;
-  getID(token).then((result) => {
-    let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
-    if (req.path == "/packet") {
-      db.query(query_packet, [result[0].id], (err, response) => {
-        if (err) {
-          res.send(JSON.stringify(err.sqlMessage));
-        } else {
-          res.status(200).send(response);
+  if (req.path == "/packet") {
+    let token = req.headers.authorization;
+    getID(token)
+      .then((result) => {
+        let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
+        if (req.path == "/packet") {
+          db.query(query_packet, [result[0].id], (err, response) => {
+            if (err) {
+              res.send(JSON.stringify(err.sqlMessage));
+            } else {
+              res.status(200).send(response);
+            }
+          });
         }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: "Error getting user id" });
       });
-    }
-  }).catch(err => {
-    res.status(500).json({error: 'Error getting user id'}); 
-  })
- }
+  }
 });
 
 module.exports = {

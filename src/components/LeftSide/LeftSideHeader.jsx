@@ -1,32 +1,34 @@
-import React, { useEffect, useState ,useMemo } from "react";
+import React, { useEffect, useState ,useMemo, memo } from "react";
 import { Link } from "react-router-dom";
 import img1 from "../../assets/1.jpg";
 import { getFromLocalStorage } from "../../utils/funcs.js"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function LeftSideHeader() {
+function LeftSideHeader() {
   const [userInfo, setUserInfo] = useState([]);
+  const [token,setToken]=useState('')
+  const memorizeInfo=useMemo(()=>userInfo, [userInfo])
+
+  function fetchUser(){ 
+   return fetch("http://localhost:5000/getinfo",{
+      method:'POST', 
+      headers:{
+        'Content-Type':'application/json',
+      },
+      body:JSON.stringify({token})
+    })
+    .then(res=>res.json())
+    .then(data=>setUserInfo(data))   
+  }
+
+  const { mutate }=useMutation(['getinfo'],fetchUser)
+
   useEffect(() => {
     const user=JSON.parse(getFromLocalStorage('user')).token
-    if(user){
-     const fetchUser=async()=>{ 
-      const res=await fetch("http://localhost:5000/getinfo",{
-        method:'POST', 
-        headers:{
-          'Content-Type':'application/json',
-        },
-        body:JSON.stringify({token:user})
-      }) 
-      const data=await res.json()
-      setUserInfo(data); 
-    }
-    fetchUser()
-    
-  }else{
-    window.location.href="/register"
-  }
+    setToken(user)
+      mutate()
+  },[token]);
   
-  },[]);
-  const memorizeInfo=useMemo(()=>userInfo, [userInfo])
   return (
     <div className="flex p-10 bg-white-50 lg:justify-center justify-between items-center rounded-3xl lg:gap-10 gap-52 border border-gold-400">
       <div className="w-[7rem] h-[7rem] flex justify-center items-center rounded-full overflow-hidden border-4 border-gold-400">
@@ -51,3 +53,5 @@ export default function LeftSideHeader() {
     </div>
   );
 }
+
+export default memo(LeftSideHeader)

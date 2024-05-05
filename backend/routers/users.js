@@ -96,7 +96,7 @@ mypanel.post("/mypanel", (req, res) => {
 getinfo.post("/getinfo", (req, res) => {
   let queryInfo = `SELECT * FROM register WHERE token=?`;
   if (req.path == "/getinfo") {
-    db.query(queryInfo, [req.body.token], (err, response) => {
+    db.query(queryInfo, [req.body.user], (err, response) => {
       if (err) {
         // console.log('err');
         res.status(400).json({ message: "can not find user registered" });
@@ -184,9 +184,10 @@ getPacket_services.get("/packet", (req, res) => {
     let token = req.headers.authorization;
     getID(token)
       .then((result) => {
-        let query_packet = `SELECT * FROM recomment_packet WHERE userID=?`;
-        if (req.path == "/packet") {
-          db.query(query_packet, [result[0].id], (err, response) => {
+        let id=result[0].id
+        let query_packet = `SELECT * FROM services WHERE userID=?`;
+        if (id) {
+          db.query(query_packet, [id], (err, response) => {
             if (err) {
               res.send(JSON.stringify(err.sqlMessage));
             } else {

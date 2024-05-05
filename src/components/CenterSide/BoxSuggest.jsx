@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { getFromLocalStorage } from "../../utils/funcs";
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,28 +6,28 @@ export default function BoxSuggest() {
   const [dataPacket,setDataPacket]=useState([])
   var local = getFromLocalStorage("user");
   var tokens = JSON.parse(local).token;
-  const { data, isLoading,isFetching } = useQuery(
-    ["Packet"],
-    () => {
+  const { data, isLoading,isFetching } = useQuery(["Packet"],() => {
       return fetch("http://localhost:5000/packet", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `${tokens}`,
         },
-      }).then((response) => response.json());
+      })
+      .then(response => response.json())
+      .catch(err=>{return undefined})
     },
     {
-      staleTime: 5000,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      retry: 1,
     }
   );
+
   return (
     <div className="flex flex-col bg-white-50 p-10 rounded-3xl gap-10 mt-10 ">
       <h4>بسته های پیشنهادی مخصوص خود شما!</h4>
       <div>
+             {data !==undefined && data.length ?
         <table className="table-fixed w-full border-collapse [&>*]:text-center [&>*]:border-black [&>*]:border-solid [&>*]:border">
           <thead>
             <tr className="[&>*]:p-5">
@@ -38,8 +38,7 @@ export default function BoxSuggest() {
             </tr>
           </thead>
           <tbody>
-            {data &&
-              data.map((elem) => (
+              {data.map((elem) => (
                   <tr key={elem.id}>
                     <td>14شهریور</td>
                     <td>بسته سه ماهه</td>
@@ -53,7 +52,10 @@ export default function BoxSuggest() {
                   </tr>
               ))}
           </tbody>
-        </table>
+               </table>
+               :
+              (<p>شما بسته پیشنهادی ندارید</p>)
+              } 
       </div>
     </div>
   );
